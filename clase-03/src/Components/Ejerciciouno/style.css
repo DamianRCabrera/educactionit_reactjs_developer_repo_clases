@@ -1,0 +1,20 @@
+.teletrabajo{
+  display: flex;
+  flex-direction: column;
+  border: 1px solid grey;
+  border-radius: .5rem;
+}
+
+.teletrabajo__image{
+  height: 80%;
+}
+
+.teletrabajo__info{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 20%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
