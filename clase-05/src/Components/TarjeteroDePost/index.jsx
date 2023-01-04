@@ -29,7 +29,7 @@ const json = [
 ];
 
 function TarjeteroDePost() {
-  /* ACA VAMOS A HACER UNA CONECCION A API */
+  /* ACA VAMOS A HACER UNA CONEXION A API */
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap", width: 700 }}>
