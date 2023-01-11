@@ -1,8 +1,6 @@
 .App {
   text-align: center;
-  min-height: 100vh;
   display: flex;
-  justify-content: column;
+  justify-content: center;
   align-items: center;
 }
-
