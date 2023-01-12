@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Redux basic example</title>
+  <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <p>
+      Clicked: <span id="value">0</span> times
+      <button id="increment">+</button>
+      <button id="decrement">-</button>
+    </p>
+  </div>
+</body>
+
+<script>
+  //Actions
+  const actionIncrement = {
+    type: "INCREMENT",
+    payload: 1
+  }
+
+  const actionDecrement = {
+    type: "DECREMENT",
+  }
+
+  //RootReducer -> Reducer que maneja el store;
+  function rootReducer(state, action){
+    if(typeof state === 'undefined'){
+      return 0;
+    }
+    switch (action.type){
+      case "INCREMENT":
+        return state + action.payload;
+      case "DECREMENT":
+        return state - 1;
+      default:
+        return state;
+    }
+  }
+
+  //Crear store;
+  const store =  Redux.createStore(rootReducer);
+
+  //Actualización de la view;
+  const valueEl = document.getElementById("value");
+
+  function render(){
+    valueEl.innerHTML = store.getState().toString();
+  }
+
+  render();
+
+  //Suscribirse a los cambios del store;
+  store.subscribe(render);
+
+  //Dispatch de las acciones;
+  const incrementEl = document.getElementById("increment");
+  const decrementEl = document.getElementById("decrement");
+
+  incrementEl.addEventListener("click", function(){
+    store.dispatch(actionIncrement);
+    console.log("hola")
+  });
+
+  decrementEl.addEventListener("click", function(){
+    store.dispatch(actionDecrement);
+  });
+</script>
+
+</html>

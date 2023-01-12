@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ejercicio Redux</title>
+  <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+</head>
+
+<body style="height: 100vh" class="d-flex flex-column justify-content-between bg-secondary text-light p-2">
+  <header>
+    <h1>My Todo List</h1>
+  </header>
+  <main style="height: calc(100vh - 65px)" class="p-2">
+    <div class="h-75 d-flex flex-column justify-content-between mt-4">
+      <section>
+        <h3>Lista de Tareas</h3>
+        <div style="width: 430px" class="m-auto d-flex flex-column align-items-center mt-4">
+          <ul id="todos-container" class="w-50 mb-4"></ul>
+          <button id="clear-todos" class="btn btn-light">Borrar Lista</button>
+        </div>
+      </section>
+      <section>
+        <h3>Agregar Nueva tarea</h3>
+        <form id="add-todo" style="width: 400px; height: 80px"
+          class="m-auto d-flex justify-content-evenly align-items-center mt-4">
+          <label for="add">Tarea</label> <input id="add" name="todoText" />
+          <button class="btn btn-light">Agregar</button>
+        </form>
+      </section>
+    </div>
+  </main>
+  <footer class="d-flex justify-content-center">
+    <span>&copy;Copyrigth</span>
+  </footer>
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+
+  <script>
+    //Elementos del HTML;
+    const todosContainer = document.getElementById("todos-container");
+    const form = document.getElementById("add-todo");
+    const input = document.getElementById("add");
+    const clearToDos = document.getElementById("clear-todos");
+
+    //Estado inicial
+    const initialState = {
+      todos: [
+        { id: 1, text: "Tarea 1", done: false },
+        { id: 2, text: "Tarea 2", done: false },
+        { id: 3, text: "Tarea 3", done: false },
+      ],
+    };
+
+    //Root Reducer;
+    function rootReducer(state = initialState, action) {
+      switch (action.type) {
+        case "ADD_TODO": {
+          const newTodos = [
+            ...state.todos,
+            {
+              id: Date.now(),
+              text: action.payload,
+              done: false
+            }
+          ]
+
+          return {
+            ...state,
+            todos: newTodos
+          }
+        }
+
+        case "TOGGLE_DONE": {
+          const newTodos = state.todos.map(todo => {
+            return todo.id === action.payload ? { ...todo, done: !todo.done } : todo
+          })
+
+          return {
+            ...state,
+            todos: newTodos
+          }
+        }
+
+        case "CLEAR_TODOS":
+          return {
+            ...state,
+            todos: [],
+          };
+        default:
+          return state;
+      }
+    };
+
+    //Store
+    const store = Redux.createStore(rootReducer);
+    renderTodos();
+
+    store.subscribe(renderTodos);
+
+    //Render
+    function renderTodos(){
+      const {todos} = store.getState();
+
+      //Cada vez que se ejecute limpiamos el contenedor;
+      todosContainer.innerHTML = "";
+
+      //Crear items para <ul>
+      todos.forEach(todo => {
+        const li = document.createElement("li");
+        li.className = "mb-2";
+        li.textContent = todo.text;
+        if(todo.done) li.style.textDecoration = "line-through";
+        const btnDone = document.createElement("button");
+        btnDone.className = "btn btn-light";
+        btnDone.textContent = "Done";
+        btnDone.addEventListener("click", () => {
+          store.dispatch({
+            type: "TOGGLE_DONE",
+            payload: todo.id
+          })
+        })
+        li.appendChild(btnDone);
+        todosContainer.appendChild(li);
+      })
+    }
+
+    //Dispatch de acciones;
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const todoText = e.target.elements.todoText.value;
+      store.dispatch({
+        type: "ADD_TODO",
+        payload: todoText,
+      });
+      input.value = "";
+    });
+
+    clearToDos.addEventListener("click", () => {
+      store.dispatch({
+        type: "CLEAR_TODOS",
+      });
+    });
+
+
+  </script>
+</body>
+
+</html>
