@@ -1,13 +1,18 @@
-import React from "react";
+import { useContext } from "react";
+import ShoppingContext from "./context/shoppingContext";
 
-const ProductItem = () => {
+const ProductItem = ({ data }) => {
+  const { addToCart } = useContext(ShoppingContext);
+  let { id, name, price, img, description } = data;
   return (
     <div style={{ border: "thin solid gray", padding: "1rem" }}>
-      <h4>Nombre</h4>
-      <img width={150} src="" alt="nombre" />
-      <h5>$100</h5>
-      <p>Descripción</p>
-      <button className="btn btn-success">Agregar</button>
+      <h4>{name}</h4>
+      <img width={150} src={img} alt={name} />
+      <h5>${price}</h5>
+      <p>{description}</p>
+      <button className="btn btn-success" onClick={() => addToCart(id)}>
+        Agregar
+      </button>
     </div>
   );
 };
